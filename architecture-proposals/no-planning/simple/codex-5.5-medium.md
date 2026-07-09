@@ -43,8 +43,8 @@ hatch:
 
 ```go
 type source interface {
-start([]os.Signal) (<-chan os.Signal, error)
-stop()
+  start([]os.Signal) (<-chan os.Signal, error)
+  stop()
 }
 ```
 
@@ -191,14 +191,14 @@ an explicit overflow policy.
 type OverflowPolicy uint8
 
 const (
-Block OverflowPolicy = iota
-DropNewest
-Disconnect
+    Block OverflowPolicy = iota
+    DropNewest
+    Disconnect
 )
 
 type Subscription[E any] struct {
-C <-chan E
-// unexported identity and hub reference
+    C <-chan E
+    // unexported identity and hub reference
 }
 
 func (s *Subscription[E]) Close()

@@ -35,16 +35,16 @@ explicitly rather than silently taking the last value.
 
 ```go
 var (
-ErrAlreadyStarted = errors.New("signal listener already started")
-ErrNotStarted = errors.New("signal listener not started")
-ErrStopped        = errors.New("signal listener stopped")
-ErrClosed = errors.New("subscription closed")
-ErrInvalidMapping = errors.New("invalid signal mapping")
+    ErrAlreadyStarted = errors.New("signal listener already started")
+    ErrNotStarted = errors.New("signal listener not started")
+    ErrStopped        = errors.New("signal listener stopped")
+    ErrClosed = errors.New("subscription closed")
+    ErrInvalidMapping = errors.New("invalid signal mapping")
 )
 
 type Source interface {
-Notify(chan<- os.Signal, ...os.Signal)
-Stop(chan<- os.Signal)
+    Notify(chan<- os.Signal, ...os.Signal)
+    Stop(chan<- os.Signal)
 }
 ```
 
@@ -244,21 +244,21 @@ centralized error handling, and do not need dynamic subscriptions.
 
 ```go
 type Handler[E any] interface {
-HandleSignalEvent(context.Context, E) error
+    HandleSignalEvent(context.Context, E) error
 }
 
 type HandlerFunc[E any] func (context.Context, E) error
 
 func (f HandlerFunc[E]) HandleSignalEvent(ctx context.Context, e E) error {
-return f(ctx, e)
+    return f(ctx, e)
 }
 
 type Runner[E any] struct { /* unexported */ }
 
 func NewRunner[E any](
-mapping map[os.Signal]E,
-handler Handler[E],
-opts ...RunnerOption,
+    mapping map[os.Signal]E,
+    handler Handler[E],
+    opts ...RunnerOption,
 ) (*Runner[E], error)
 
 func (r *Runner[E]) Start(ctx context.Context) error
@@ -372,8 +372,8 @@ events as state transitions, not a stream.
 type Scope[E comparable] struct { /* unexported */ }
 
 func NewScope[E comparable](
-parent context.Context,
-mapping map[os.Signal]E,
+    parent context.Context,
+    mapping map[os.Signal]E,
 ) (*Scope[E], error)
 
 // Start creates event contexts and registers signal notification exactly once.
@@ -397,7 +397,7 @@ For deterministic unit tests, use an internal `ContextSource` abstraction:
 
 ```go
 type contextSource interface {
-NotifyContext(context.Context, ...os.Signal) (context.Context, context.CancelFunc)
+    NotifyContext(context.Context, ...os.Signal) (context.Context, context.CancelFunc)
 }
 ```
 
@@ -480,9 +480,9 @@ consumers must be isolated.
 type OverflowPolicy uint8
 
 const (
-DropNewest OverflowPolicy = iota
-DropOldest
-DisconnectSlow
+    DropNewest OverflowPolicy = iota
+    DropOldest
+    DisconnectSlow
 )
 
 type Subscription[E any] struct { /* unexported */ }

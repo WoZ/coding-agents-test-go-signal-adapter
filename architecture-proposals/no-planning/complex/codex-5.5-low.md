@@ -13,8 +13,8 @@ All variants use an internal, unexported signal-source seam:
 
 ```go
 type signalSource interface {
-Notify(chan<- os.Signal, ...os.Signal)
-Stop(chan<- os.Signal)
+    Notify(chan<- os.Signal, ...os.Signal)
+    Stop(chan<- os.Signal)
 }
 ```
 
@@ -26,11 +26,11 @@ Common errors are intentionally small:
 
 ```go
 var (
-ErrAlreadyStarted = errors.New("signal listener already started")
-ErrNotStarted = errors.New("signal listener not started")
-ErrStopped        = errors.New("signal listener stopped")
-ErrInvalidMapping = errors.New("invalid signal mapping")
-ErrClosed = errors.New("subscription closed")
+    ErrAlreadyStarted = errors.New("signal listener already started")
+    ErrNotStarted = errors.New("signal listener not started")
+    ErrStopped        = errors.New("signal listener stopped")
+    ErrInvalidMapping = errors.New("invalid signal mapping")
+    ErrClosed = errors.New("subscription closed")
 )
 ```
 
@@ -314,9 +314,9 @@ with an independent bounded buffer and overflow policy. This is the highly concu
 ```go
 type OverflowPolicy uint8
 const (
-Block OverflowPolicy = iota
-DropNewest
-DropOldest
+    Block OverflowPolicy = iota
+    DropNewest
+    DropOldest
 )
 
 type Subscription[T any] struct { /* unexported */ }

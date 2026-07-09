@@ -87,7 +87,7 @@ Production uses `signal.Notify` through an internal abstraction:
 
 ```go
 type signalSource interface {
-start([]os.Signal) (<-chan os.Signal, func (), error)
+    start([]os.Signal) (<-chan os.Signal, func (), error)
 }
 ```
 
@@ -187,8 +187,8 @@ The send is cancellation-aware:
 
 ```go
 select {
-case events <- event:
-case <-runCtx.Done():
+    case events <- event:
+    case <-runCtx.Done():
 }
 ```
 
@@ -464,9 +464,9 @@ fan-out.
 type OverflowPolicy uint8
 
 const (
-DropNewest OverflowPolicy = iota
-DropOldest
-DisconnectSlow
+    DropNewest OverflowPolicy = iota
+    DropOldest
+    DisconnectSlow
 )
 
 type Subscription[T any] struct { /* private */ }

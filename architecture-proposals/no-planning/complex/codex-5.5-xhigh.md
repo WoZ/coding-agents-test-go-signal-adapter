@@ -61,8 +61,8 @@ All variants depend on a small unexported interface:
 
 ```go
 type signalSource interface {
-Notify(chan<- os.Signal, ...os.Signal) error
-Stop(chan<- os.Signal)
+    Notify(chan<- os.Signal, ...os.Signal) error
+    Stop(chan<- os.Signal)
 }
 ```
 
@@ -81,18 +81,18 @@ The exported error surface should remain small:
 
 ```go
 var (
-ErrStarted = errors.New("signal adapter has already been started")
-ErrNotStarted = errors.New("signal adapter has not been started")
-ErrStopping          = errors.New("signal adapter is stopping")
-ErrStopped = errors.New("signal adapter has stopped")
-ErrNoMapping = errors.New("signal mapping is empty")
-ErrUnsupportedSignal = errors.New("signal is unsupported")
-ErrNilContext = errors.New("context is nil")
+    ErrStarted = errors.New("signal adapter has already been started")
+    ErrNotStarted = errors.New("signal adapter has not been started")
+    ErrStopping          = errors.New("signal adapter is stopping")
+    ErrStopped = errors.New("signal adapter has stopped")
+    ErrNoMapping = errors.New("signal mapping is empty")
+    ErrUnsupportedSignal = errors.New("signal is unsupported")
+    ErrNilContext = errors.New("context is nil")
 )
 
 type ConfigError struct {
-Field string
-Err   error
+    Field string
+    Err   error
 }
 
 func (e *ConfigError) Error() string
@@ -299,12 +299,12 @@ and avoids unbounded goroutine creation. It also makes handler latency part of s
 type Handler[T any] func (context.Context, T) error
 
 type DispatcherConfig[T any] struct {
-Mapping      map[os.Signal]T
-SignalBuffer int
+    Mapping      map[os.Signal]T
+    SignalBuffer int
 }
 
 type Dispatcher[T any] struct {
-// unexported
+    // unexported
 }
 
 func NewDispatcher[T any](cfg DispatcherConfig[T]) (*Dispatcher[T], error)
@@ -328,13 +328,13 @@ Additional errors:
 
 ```go
 var (
-ErrNoHandlers = errors.New("dispatcher has no handlers")
-ErrRunning = errors.New("signal adapter is running")
+    ErrNoHandlers = errors.New("dispatcher has no handlers")
+    ErrRunning = errors.New("signal adapter is running")
 )
 
 type HandlerError struct {
-Index int
-Err   error
+    Index int
+    Err   error
 }
 
 func (e *HandlerError) Error() string
@@ -461,13 +461,13 @@ boundary.
 
 ```go
 type ReceiverConfig[T any] struct {
-Mapping      map[os.Signal]T
-QueueSize    int
-SignalBuffer int
+    Mapping      map[os.Signal]T
+    QueueSize    int
+    SignalBuffer int
 }
 
 type Receiver[T any] struct {
-// unexported
+    // unexported
 }
 
 func NewReceiver[T any](cfg ReceiverConfig[T]) (*Receiver[T], error)
@@ -601,27 +601,27 @@ subscriber churn is expected.
 type OverflowPolicy uint8
 
 const (
-DropNewest OverflowPolicy = iota
-DropOldest
-CancelSubscriber
+    DropNewest OverflowPolicy = iota
+    DropOldest
+    CancelSubscriber
 )
 
 type HubConfig[T any] struct {
-Mapping      map[os.Signal]T
-SignalBuffer int
+    Mapping      map[os.Signal]T
+    SignalBuffer int
 }
 
 type SubscriptionConfig struct {
-Buffer   int
-Overflow OverflowPolicy
+    Buffer   int
+    Overflow OverflowPolicy
 }
 
 type Hub[T any] struct {
-// unexported
+    // unexported
 }
 
 type Subscription[T any] struct {
-// unexported
+    // unexported
 }
 
 func NewHub[T any](cfg HubConfig[T]) (*Hub[T], error)

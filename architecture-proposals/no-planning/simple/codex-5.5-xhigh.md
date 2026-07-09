@@ -78,11 +78,11 @@ The package hides `os/signal` behind an unexported port:
 
 ```go
 type signalSource interface {
-Register(signals []os.Signal, capacity int) (
-events <-chan os.Signal,
-stop func (),
-err error,
-)
+    Register(signals []os.Signal, capacity int) (
+        events <-chan os.Signal,
+        stop func (),
+        err error,
+    )
 }
 ```
 
@@ -120,7 +120,7 @@ goroutine, and returns a receive-only event channel:
 
 ```go
 type Adapter[E any] struct {
-// Unexported immutable configuration and synchronized lifecycle state.
+    // Unexported immutable configuration and synchronized lifecycle state.
 }
 
 func New[E any](mapping Mapping[E], opts ...Option) (*Adapter[E], error)
@@ -138,20 +138,20 @@ defer close(out)
 defer markStopped()
 
 for {
-select {
-case <-runCtx.Done():
-return
-case sig, ok := <-signals:
-if !ok {
-return
-}
-event := mapping[sig]
-select {
-case out <- event:
-case <-runCtx.Done():
-return
-}
-}
+    select {
+    case <-runCtx.Done():
+        return
+    case sig, ok := <-signals:
+        if !ok {
+            return
+        }
+        event := mapping[sig]
+        select {
+            case out <- event:
+            case <-runCtx.Done():
+                return
+        }
+    }
 }
 ```
 
@@ -209,7 +209,7 @@ event at a time:
 
 ```go
 type Cursor[E any] struct {
-// Unexported source, mapping, lifecycle, and single-reader gate.
+    // Unexported source, mapping, lifecycle, and single-reader gate.
 }
 
 func NewCursor[E any](mapping Mapping[E], opts ...Option) (*Cursor[E], error)
@@ -279,18 +279,18 @@ registry and all subscriber-channel closure, eliminating send/close races:
 type OverflowPolicy uint8
 
 const (
-DropNewest OverflowPolicy = iota
-DropOldest
-DisconnectSlow
-Block
+    DropNewest OverflowPolicy = iota
+    DropOldest
+    DisconnectSlow
+    Block
 )
 
 type Router[E any] struct {
-// Unexported configuration, lifecycle, and actor command channel.
+    // Unexported configuration, lifecycle, and actor command channel.
 }
 
 type Subscription[E any] struct {
-// Unexported receive channel and idempotent unsubscribe operation.
+    // Unexported receive channel and idempotent unsubscribe operation.
 }
 
 func NewRouter[E any](mapping Mapping[E], opts ...RouterOption) (*Router[E], error)
@@ -372,17 +372,17 @@ cancellation or failure.
 
 ```go
 type Dispatcher[E any] interface {
-Dispatch(context.Context, E) error
+    Dispatch(context.Context, E) error
 }
 
 type Runner[E any] struct {
-// Unexported source, mapping, dispatcher, and lifecycle.
+    // Unexported source, mapping, dispatcher, and lifecycle.
 }
 
 func NewRunner[E any](
-mapping Mapping[E],
-dispatcher Dispatcher[E],
-opts ...RunnerOption,
+    mapping Mapping[E],
+    dispatcher Dispatcher[E],
+    opts ...RunnerOption,
 ) (*Runner[E], error)
 
 func (r *Runner[E]) Run(ctx context.Context) error
@@ -394,7 +394,7 @@ selects on source signals and the private run context, remaps each signal, and c
 
 ```go
 if err := dispatcher.Dispatch(runCtx, event); err != nil {
-return fmt.Errorf("dispatch mapped signal event: %w", err)
+    return fmt.Errorf("dispatch mapped signal event: %w", err)
 }
 ```
 

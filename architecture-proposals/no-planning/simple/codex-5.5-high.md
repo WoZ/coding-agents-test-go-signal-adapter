@@ -78,8 +78,8 @@ For tests, signal registration sits behind an unexported interface:
 
 ```go
 type signalSource interface {
-Notify(chan<- os.Signal, ...os.Signal)
-Stop(chan<- os.Signal)
+    Notify(chan<- os.Signal, ...os.Signal)
+    Stop(chan<- os.Signal)
 }
 ```
 
@@ -98,18 +98,18 @@ The adapter exposes one receive-only event channel. A caller can consume it dire
 
 ```go
 type Stream[E any] struct {
-// unexported
+    // unexported
 }
 
 type StreamOptions struct {
-EventBuffer  int
-SignalBuffer int
-FullBuffer   BufferPolicy
+    EventBuffer  int
+    SignalBuffer int
+    FullBuffer   BufferPolicy
 }
 
 func NewStream[E any](
-mappings []Mapping[E],
-opts StreamOptions,
+    mappings []Mapping[E],
+    opts StreamOptions,
 ) (*Stream[E], error)
 
 func (s *Stream[E]) Events() <-chan E
@@ -164,24 +164,24 @@ design and makes serialized processing explicit.
 
 ```go
 type Handler[E any] interface {
-HandleSignalEvent(context.Context, E) error
+    HandleSignalEvent(context.Context, E) error
 }
 
 type HandlerFunc[E any] func (context.Context, E) error
 
 func (f HandlerFunc[E]) HandleSignalEvent(ctx context.Context, event E) error {
-return f(ctx, event)
+    return f(ctx, event)
 }
 
 type HandlerOptions struct {
-SignalBuffer int
-OnError      func (error)
+    SignalBuffer int
+    OnError      func (error)
 }
 
 func NewHandlerAdapter[E any](
-mappings []Mapping[E],
-handler Handler[E],
-opts HandlerOptions,
+    mappings []Mapping[E],
+    handler Handler[E],
+    opts HandlerOptions,
 ) (*HandlerAdapter[E], error)
 ```
 
@@ -238,26 +238,26 @@ bounded mailbox and a dedicated forwarding goroutine, isolating fast subscribers
 type SlowSubscriberPolicy uint8
 
 const (
-DropForSubscriber SlowSubscriberPolicy = iota
-DisconnectSubscriber
-BlockBroker
+    DropForSubscriber SlowSubscriberPolicy = iota
+    DisconnectSubscriber
+    BlockBroker
 )
 
 type Subscription[E any] interface {
-Events() <-chan E
-Dropped() uint64
-Unsubscribe()
+    Events() <-chan E
+    Dropped() uint64
+    Unsubscribe()
 }
 
 type BrokerOptions struct {
-SignalBuffer    int
-SubscriberQueue int
-SlowSubscriber SlowSubscriberPolicy
+    SignalBuffer    int
+    SubscriberQueue int
+    SlowSubscriber SlowSubscriberPolicy
 }
 
 func NewBroker[E any](
-mappings []Mapping[E],
-opts BrokerOptions,
+    mappings []Mapping[E],
+    opts BrokerOptions,
 ) (*Broker[E], error)
 
 func (b *Broker[E]) Subscribe() (Subscription[E], error)

@@ -152,7 +152,7 @@ This variant separates signal translation from delivery by requiring a caller-pr
 
 ```go
 type Sink[T any] interface {
-Publish(context.Context, T) error
+    Publish(context.Context, T) error
 }
 
 func NewAdapter[T any](mapping map[os.Signal]T, sink Sink[T], opts ...Option) (*Adapter[T], error)
@@ -197,8 +197,8 @@ The package owns a signal receiver and a broker. Subscribers obtain independent 
 
 ```go
 type Subscription[T any] interface {
-Events() <-chan T
-Close()
+    Events() <-chan T
+    Close()
 }
 
 func NewBroker[T any](mapping map[os.Signal]T, opts ...Option) (*Broker[T], error)
