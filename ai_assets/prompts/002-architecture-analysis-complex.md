@@ -2,7 +2,14 @@
 
 ## Variables
 
-- `outputDir`: `architecture-proposals/complex`
+* `executionMode`: ask the user at the beginning of the run whether this prompt is being executed in `planning` mode
+  or `default` mode.
+* `outputDir`: build this value from `executionMode`:
+* * if `executionMode` is `default`, use `architecture-proposals/no-planning/complex`
+* * if `executionMode` is `planning`, use `architecture-proposals/planning/complex`
+
+Before starting the analysis, explicitly ask the user which mode is being used: `planning` or `default`.
+Do not continue until the user provides one of these values. Use the selected mode to build the `outputDir` path.
 
 ## Context
 
